@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DataSource {
 
-    DataItem dataItem = new DataItem();
+   // DataItem dataItem = new DataItem();
     private Context mContext;
     private SQLiteDatabase mDatabase;
     SQLiteOpenHelper mDbHelper;
@@ -60,7 +60,6 @@ public class DataSource {
 
     public List<DataItem> getAllItems() {
         List<DataItem> dataItems = new ArrayList<>();
-
         Cursor cursor = mDatabase.query(DBHelper.TABLE_ITEMS, DBHelper.ALL_COLUMNS,
                 null, null, null, null, null);
 
@@ -97,20 +96,7 @@ public class DataSource {
         mDatabase.insert(DBHelper.TABLE_ITEMS, null, values);
         return 0;
     }
-    public void save(String itemId, String itemName, String description, String category, int sortPosition, double price, String image, String color, String year, String vin)
-        {
-            //OPEN
-            open();
 
-            //INSERT
-            insert(itemId, itemName, description, category, sortPosition, price, image, color, year, vin);
-
-
-            //CLOSE
-            close();
-
-
-        }
 
 
     public int update(String itemId, String itemName, String description, String category, int sortPosition, double price, String image, String color, String year, String vin ) {

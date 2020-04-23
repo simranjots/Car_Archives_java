@@ -109,7 +109,7 @@ public class AddCarActivity extends AppCompatActivity {
                     finishAffinity();
 
                 } else {
-                   dbManager.save(carDetail.getItemId(), edtName.getText().toString()," ",
+                   dbManager.insert(carDetail.getItemId(), edtName.getText().toString()," ",
                             edtModel.getText().toString(), i, Double.parseDouble(edtPrice.getText().toString()), "mclaren.jpg",
                             edtColor.getText().toString(),edtYear.getText().toString(),
                             edtVin.getText().toString());
