@@ -114,6 +114,7 @@ public class AddCarActivity extends AppCompatActivity {
                             edtColor.getText().toString(),edtYear.getText().toString(),
                             edtVin.getText().toString());
                     if (i>4){
+                        
                         i = 0;
                     }
                     i++;
