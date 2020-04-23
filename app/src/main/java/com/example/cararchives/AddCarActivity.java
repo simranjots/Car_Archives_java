@@ -16,14 +16,15 @@ import com.example.cararchives.Model.DataItem;
 import com.example.cararchives.database.DataSource;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class AddCarActivity extends AppCompatActivity {
 
     private Activity activity;
-
     private DataSource dbManager;
     private DataItem carDetail;
-
     private String imagePath = "";
     private boolean forUpdate = false;
     ImageView imageView;
@@ -109,15 +110,19 @@ public class AddCarActivity extends AppCompatActivity {
                     finishAffinity();
 
                 } else {
-                   dbManager.insert(carDetail.getItemId(), edtName.getText().toString()," ",
+                     DataItem item ;  
+                    List<DataItem> dataItems =  new ArrayList<>();
+                  item = new DataItem(carDetail.getItemId(), edtName.getText().toString()," ",
                             edtModel.getText().toString(), i, Double.parseDouble(edtPrice.getText().toString()), "mclaren.jpg",
                             edtColor.getText().toString(),edtYear.getText().toString(),
                             edtVin.getText().toString());
                     if (i>4){
-                        
+
                         i = 0;
                     }
                     i++;
+                    dataItems.add(item);
+                    dbManager.seedDatabase(dataItems);
                     setResult(RESULT_OK);
                     finish();
                 }

@@ -45,8 +45,7 @@ public class DataSource {
     }
 
     public void seedDatabase(List<DataItem> dataItemList) {
-        long numItems = getDataItemsCount();
-        if (numItems == 0) {
+       // long numItems = getDataItemsCount();
             for (DataItem item :
                     dataItemList) {
                 try {
@@ -55,7 +54,7 @@ public class DataSource {
                     e.printStackTrace();
                 }
             }
-        }
+
     }
 
     public List<DataItem> getAllItems() {

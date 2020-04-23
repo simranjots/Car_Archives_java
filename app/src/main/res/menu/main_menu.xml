@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_signin"
-        android:title="@string/sign_in"
+        android:title="LogOut"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_settings"

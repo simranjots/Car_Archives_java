@@ -2,13 +2,13 @@ package com.example.cararchives;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +30,6 @@ public class AdminActivity extends AppCompatActivity {
 
     private static final int SIGNIN_REQUEST = 1001;
     public static final String MY_GLOBAL_PREFS = "my_global_prefs";
-    private static final String TAG = "MainActivity";
     List<DataItem> dataItemList = SampleDataProvider.dataItemList;
 
     boolean ImageType = true;
@@ -52,8 +51,6 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(getApplicationContext(), AddCarActivity.class);
-                intent.putExtra("fromAdmin", true);
-                intent.putExtra("CarDetail", item.getItemId());
                 startActivity(intent);
             }
         });
@@ -90,6 +87,7 @@ public class AdminActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mDataSource.open();
+        displayDataItems();
     }
 
     @Override
