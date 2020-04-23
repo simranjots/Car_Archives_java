@@ -3,8 +3,8 @@ package com.example.cararchives;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +18,17 @@ import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cararchives.Interface.ItemTouchHelperAdapter;
 import com.example.cararchives.Model.DataItem;
+import com.example.cararchives.database.DBHelper;
+import com.example.cararchives.database.DataSource;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
-public class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.ViewHolder> {
+public class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.ViewHolder>  {
 
     public static final String ITEM_ID_KEY = "item_id_key";
     public static final String ITEM_KEY = "item_key";
@@ -31,6 +36,7 @@ public class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.ViewHo
     private Context mContext;
     private SharedPreferences.OnSharedPreferenceChangeListener prefsListener;
     boolean Imagetype ;
+    public static Cursor mcursor ;
 
     public DataItemAdapter(Context context, List<DataItem> items,boolean imageType) {
         this.mContext = context;
@@ -65,15 +71,20 @@ public class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.ViewHo
     @Override
     public void onBindViewHolder(DataItemAdapter.ViewHolder holder, int position) {
         final DataItem item = mItems.get(position);
+        if (!mcursor.moveToPosition(position)) {
+            return;
+        }
+        long id = mcursor.getLong(mcursor.getColumnIndex(DBHelper.COLUMN_ID));
 
-              try {
+        try {
                   holder.tvName.setText(item.getItemName());
-                  if (Imagetype) {
+
                       String imageFile = item.getImage();
                       InputStream inputStream = mContext.getAssets().open(imageFile);
                       Drawable d = Drawable.createFromStream(inputStream, null);
                       holder.imageView.setImageDrawable(d);
-                  }
+                      holder.mView.setTag(id);
+
               } catch (IOException e) {
                   e.printStackTrace();
               }
@@ -102,6 +113,8 @@ public class DataItemAdapter extends RecyclerView.Adapter<DataItemAdapter.ViewHo
     public int getItemCount() {
         return mItems.size();
     }
+
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 

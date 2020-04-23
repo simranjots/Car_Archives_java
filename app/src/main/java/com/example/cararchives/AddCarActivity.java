@@ -129,14 +129,7 @@ public class AddCarActivity extends AppCompatActivity {
             }
         });
 
-//        btnDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dbManager.delete(Long.parseLong(carDetail.getItemId()));
-//                startActivity(new Intent(activity, AdminActivity.class));
-//                finishAffinity();
-//            }
-//        });
+
     }
 
 

@@ -2,7 +2,11 @@ package com.example.cararchives;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
@@ -19,6 +23,9 @@ public class PrefsActivity extends AppCompatActivity {
                 .add(R.id.prefs_content, new SettingsFragment())
                 .commit();
 
+
+
+
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -26,6 +33,9 @@ public class PrefsActivity extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings);
+
         }
     }
+
+
 }

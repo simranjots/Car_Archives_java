@@ -1,9 +1,11 @@
 package com.example.cararchives;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -18,10 +20,13 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.cararchives.Model.DataItem;
+import com.example.cararchives.Model.SimpleItemTouchHelperCallback;
 import com.example.cararchives.SampleData.SampleDataProvider;
+import com.example.cararchives.database.DBHelper;
 import com.example.cararchives.database.DataSource;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,7 +35,7 @@ public class AdminActivity extends AppCompatActivity {
 
     private static final int SIGNIN_REQUEST = 1001;
     public static final String MY_GLOBAL_PREFS = "my_global_prefs";
-    List<DataItem> dataItemList = SampleDataProvider.dataItemList;
+    List<DataItem> dataItemList;
 
     boolean ImageType = true;
     DataSource mDataSource;
@@ -44,7 +49,18 @@ public class AdminActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("key_name", true);
+        editor.commit();
+        if (pref.getBoolean("key_name", false)) {
+            dataItemList = SampleDataProvider.dataItemList;
+        }else {
+            dataItemList = new ArrayList<>();
+        }
         item =  new DataItem();
+
+
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +83,19 @@ public class AdminActivity extends AppCompatActivity {
         if (grid) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         }
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT |ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                 removeItem((long)viewHolder.itemView.getTag());
+                Toast.makeText(AdminActivity.this, "Item Deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).attachToRecyclerView(mRecyclerView);
 
         displayDataItems();
     }
@@ -76,7 +105,9 @@ public class AdminActivity extends AppCompatActivity {
         mItemAdapter = new DataItemAdapter(this, listFromDB,ImageType);
         mRecyclerView.setAdapter(mItemAdapter);
     }
-
+ private void removeItem(long id){
+    mDataSource.delete(id);
+ }
     @Override
     protected void onPause() {
         super.onPause();

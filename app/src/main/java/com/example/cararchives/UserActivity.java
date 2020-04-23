@@ -2,13 +2,13 @@ package com.example.cararchives;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +21,7 @@ import com.example.cararchives.Model.DataItem;
 import com.example.cararchives.SampleData.SampleDataProvider;
 import com.example.cararchives.database.DataSource;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -30,9 +31,8 @@ public class UserActivity extends AppCompatActivity {
     private static final int SIGNIN_REQUEST = 1001;
     public static final String MY_GLOBAL_PREFS = "my_global_prefs";
     private static final String TAG = "MainActivity";
-    List<DataItem> dataItemList = SampleDataProvider.dataItemList;
+    List<DataItem> dataItemList ;
 
-    boolean ImageType = true;
     DataSource mDataSource;
     List<DataItem> listFromDB;
     DrawerLayout mDrawerLayout;
@@ -45,7 +45,15 @@ public class UserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("key_name", true);
+        editor.commit();
+        if (pref.getBoolean("key_name", false)) {
+            dataItemList = SampleDataProvider.dataItemList;
+        }else {
+            dataItemList = new ArrayList<>();
+        }
 //      Code to manage sliding navigation drawer
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mCategories = getResources().getStringArray(R.array.categories);
@@ -80,7 +88,7 @@ public class UserActivity extends AppCompatActivity {
 
     private void displayDataItems() {
         listFromDB = mDataSource.getAllItems();
-        mItemAdapter = new DataItemAdapter(this, listFromDB,ImageType);
+        mItemAdapter = new DataItemAdapter(this, listFromDB,false);
         mRecyclerView.setAdapter(mItemAdapter);
     }
 

@@ -7,6 +7,8 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.cararchives.DataItemAdapter;
 import com.example.cararchives.Model.DataItem;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -61,7 +63,7 @@ public class DataSource {
         List<DataItem> dataItems = new ArrayList<>();
         Cursor cursor = mDatabase.query(DBHelper.TABLE_ITEMS, DBHelper.ALL_COLUMNS,
                 null, null, null, null, null);
-
+    DataItemAdapter.mcursor =  getCursor(cursor);
         while (cursor.moveToNext()) {
             DataItem item = new DataItem();
             item.setItemId(cursor.getString(
@@ -89,13 +91,6 @@ public class DataSource {
 
         return dataItems;
     }
-    public long insert(String itemId, String itemName, String description, String category, int sortPosition, double price, String image, String color, String year, String vin ){
-        DataItem item = new DataItem(itemId, itemName, description,  category, sortPosition, price,  image, color, year,  vin);
-        ContentValues values = item.toValues();
-        mDatabase.insert(DBHelper.TABLE_ITEMS, null, values);
-        return 0;
-    }
-
 
 
     public int update(String itemId, String itemName, String description, String category, int sortPosition, double price, String image, String color, String year, String vin ) {
@@ -103,8 +98,11 @@ public class DataSource {
         ContentValues values = item.toValues();
         return mDatabase.update(DBHelper.TABLE_ITEMS, values, DBHelper.COLUMN_ID + " = " + itemId, null);
     }
+   public Cursor getCursor(Cursor cursor){
+        return cursor;
+    }
 
-//    public void delete(long _id) {
-//        mDatabase.delete(DBHelper.TABLE_NAME, DBHelper._ID + "=" + _id, null);
-//    }
+    public void delete(long _id) {
+        mDatabase.delete(DBHelper.TABLE_ITEMS, DBHelper.COLUMN_ID + "=" + _id, null);
+    }
 }
